@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset=utf-8 />
+  <title>IDPs from Mali</title>
+  <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+
+  <!-- loading font -->
+  <link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,200,300,600,700' rel='stylesheet' type='text/css'>
+
+  <!-- Loading jquery -->
+  <script src='js/jquery.js'></script>
+
+  <!-- Loading Mapbox, used for the popup -->
+  <script src='/js/mapbox.js'></script>
+  <link href='/css/mapbox.css' rel='stylesheet' />
+
+  <!-- Load Leaflet -->
+  <link rel="stylesheet" href="/css/leaflet.css" />
+  <script src="/js/leaflet.js"></script>
+
+  <!-- Loading c3 + d3 -->
+  <script src='/js/d3.min.js'></script>
+  <script src='/js/c3.js'></script>
+  <link href='/css/c3.css' rel='stylesheet' />
+
+  <!-- Loading style sheets that match our current site -->
+  <link rel='stylesheet' id='bean-css'  href='/css/framework.css' type='text/css' media='all' />
+  <link rel='stylesheet' id='main-style-css'  href='/css/style.css' type='text/css' media='all' />
+  <link rel='stylesheet' id='mobile-css'  href='/css/mobile.css' type='text/css' media='all' />
+  <link rel='stylesheet' id='font-awesome-four-css'  href='/css/font-awesome.min.css' type='text/css' media='all' />
+
+
+  <style>
+    body {
+      font-family: 'Source Sans Pro';
+      margin-top:20px;
+      width: 100%;
+    }
+    #map {
+      position:absolute;
+      top:460px;
+      bottom:0;
+      left: 0 ;
+      width:100%;
+    }
+  </style>
+</head>
+
+<body>
+<div class="row" style="padding-bottom: 40px;">
+  <h1><strong>Internally Displaced Persons in Mali</strong></h1>
+</div>
+<div class="row">
+  <div class='three columns' style="padding-left: 0px;">
+    <p>The data on IDPs is compiled by IOM through their Displacement Tracking Matrix (DTM) exercise and through field evaluations carried out by the partners of the Commission on Population Movements.</p>
+    <p>The dataset highlights the number of IDPs in Mali by region from Sep '12 - Jul '14.</p>
+    <a href="https://data.hdx.rwlabs.org/dataset/idps-data-by-region-in-mali" class="btn btn-default btn-lg">Download data in HDX</a>
+  </div>
+  <div id="timeseries" class="nine columns"></div>
+</div>
+<div id='map' class='map-box'></div>
+
+<style>
+.map-legend .swatch {
+  width:20px;
+  height:20px;
+  float:left;
+  margin-right:10px;
+  }
+.legend {
+    background-color: #ffffff;
+    padding: 10px;
+    border-radius: 5px;
+    line-height: 18px;
+    color: #555;
+}
+.legend i {
+    width: 18px;
+    height: 18px;
+    float: left;
+    margin-right: 8px;
+    opacity: 0.7;
+}
+.leaflet-popup-close-button {
+  display: none;
+  }
+.leaflet-popup-content-wrapper {
+  pointer-events: none;
+  }
+</style>
+
+<!-- Loading geoJSOn data -->
+<script src='data/idps_data.js'></script>
+<style>
+#timeseries .c3-line {
+  stroke-width: 2px;
+}
+#timeseries .c3-line-Bamako {
+  stroke-width: 4px;
+}
+</style>
+<script>
+//// charting data
+// this uses c3 (d3) to load the time series data from a CSV file
+// then carts it into a time series
+console.log("Generating timeseries.")
+var timeseries = c3.generate({
+  bindto: '#timeseries',
+    data: {
+      x: 'date',
+      url: 'data/idp_data.csv',
+      type: 'spline'
+    },
+    axis: {
+      x: {
+        type: 'timeseries',
+          tick: {
+            format: '%B, %Y'
+          }
+      },
+      y: {
+        show: true
+      }
+    },
+    tooltip: {
+      format: {
+        value: d3.format(',')
+      }
+    },
+    point: {
+      show: false
+    },
+    size: {
+      height: 300,
+      width: 800
+    }
+});
+
+</script>
+<script>
+//// mapping element
+// this mapping element uses MapBox + Leaflet to map
+// data stored in the idps data.
+// it only shows a choropleth map with the latest data.
+
+var mapboxTiles = L.tileLayer('https://{s}.tiles.mapbox.com/v3/reliefweb.im6jg6a0/{z}/{x}/{y}.png', {
+    attribution: '<a href="http://www.mapbox.com/about/maps/" target="_blank">Terms &amp; Feedback</a>',
+    maxZoom: 7
+});
+
+var map = L.map('map')
+    .addLayer(mapboxTiles)
+    .setView([17.63383, -3.15022], 4);
+
+// creating a popup data
+var popup = new L.Popup({ autoPan: false });
+
+// statesData comes from the 'idps_data.js' script included above
+var statesLayer = L.geoJson(statesData,  {
+    style: getStyle,
+    onEachFeature: onEachFeature
+}).addTo(map);
+
+  function getStyle(feature) {
+      return {
+          weight: 2,
+          opacity: 0.1,
+          color: 'black',
+          fillOpacity: 0.7,
+          fillColor: getColor(feature.properties.July2014)
+      };
+  }
+
+  // get color depending on population density value
+  function getColor(d) {
+      return d > 20000 ? '#b10026' :
+          d > 15000  ? '#e31a1c' :
+          d > 10000  ? '#fc4e2a' :
+          d > 5000  ? '#fd8d3c' :
+          d > 3000   ? '#feb24c' :
+          d > 2000   ? '#fed976' :
+          d > 1000   ? '#ffffb2' :
+          '#ffffe5';
+  }
+
+  // Excuse the short function name: this is not setting a JavaScript
+  // variable, but rather the variable by which the map is colored.
+  // The input is a string 'name', which specifies which column
+  // of the imported JSON file is used to color the map.
+  function setVariable(name) {
+      var scale = ranges[name];
+      usLayer.eachLayer(function(layer) {
+          // Decide the color for each state by finding its
+          // place between min & max, and choosing a particular
+          // color as index.
+          var division = Math.floor(
+              (hues.length - 1) *
+              ((layer.feature.properties[name] - scale.min) /
+              (scale.max - scale.min)));
+          // See full path options at
+          // http://leafletjs.com/reference.html#path
+          layer.setStyle({
+              fillColor: hues[division],
+              fillOpacity: 0.8,
+              weight: 0.5
+          });
+      });
+  };
+
+  function onEachFeature(feature, layer) {
+      layer.on({
+          mousemove: mousemove,
+          mouseout: mouseout,
+          click: zoomToFeature
+      });
+  }
+
+  var closeTooltip;
+
+  function mousemove(e) {
+      var layer = e.target;
+
+      popup.setLatLng(e.latlng);
+      popup.setContent('<div class="marker-title">' + "IDPs in " + layer.feature.properties.Name + ": " + "<span>" + layer.feature.properties.July2014 + "</span>" + '</div>' + "<i>July 2014</i>");
+
+      if (!popup._map) popup.openOn(map);
+      window.clearTimeout(closeTooltip);
+
+      // highlight feature
+      layer.setStyle({
+          weight: 3,
+          opacity: 0.3,
+          fillOpacity: 0.9
+      });
+
+      if (!L.Browser.ie && !L.Browser.opera) {
+          layer.bringToFront();
+      }
+  }
+
+  function mouseout(e) {
+      statesLayer.resetStyle(e.target);
+      closeTooltip = window.setTimeout(function() {
+          map.closePopup();
+      }, 100);
+  }
+
+  function zoomToFeature(e) {
+      map.fitBounds(e.target.getBounds());
+  }
+
+  var legend = L.control({position: 'bottomright'});
+
+  legend.onAdd = function (map) {
+
+      var div = L.DomUtil.create('div', 'info legend'),
+          grades = [0, 1000, 2000, 3000, 5000, 10000, 15000, 20000],
+          labels = [];
+
+      // loop through our density intervals and generate a label with a colored square for each interval
+      for (var i = 0; i < grades.length; i++) {
+          div.innerHTML +=
+              '<i style="background:' + getColor(grades[i] + 1) + '"></i> ' +
+              grades[i] + (grades[i + 1] ? '&ndash;' + grades[i + 1] + '<br>' : '+');
+      }
+
+      // return '<span>Number of IDPs</span><br/>' + labels.join('');
+      return div;
+  };
+
+  legend.addTo(map);
+
+</script>
+
+<script>
+console.log('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
+console.log('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
+console.log('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
+console.log('Visualizing HDX data.')
+console.log('Developed by @luiscape')
+console.log('Version: v.0.1')
+console.log('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
+console.log('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
+console.log('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
+</script>
+
+</body>
+</html>
