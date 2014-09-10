@@ -109,7 +109,7 @@ var timeseries = c3.generate({
   bindto: '#timeseries',
     data: {
       x: 'date',
-      url: 'data/idp_data_cummulative.csv',
+      url: 'data/idp_data.csv',
       type: 'spline'
     },
     axis: {
@@ -146,7 +146,8 @@ var timeseries = c3.generate({
 
 var mapboxTiles = L.tileLayer('https://{s}.tiles.mapbox.com/v3/reliefweb.im6jg6a0/{z}/{x}/{y}.png', {
     attribution: '<a href="http://www.mapbox.com/about/maps/" target="_blank">Terms &amp; Feedback</a>',
-    maxZoom: 7
+    maxZoom: 7,
+    minZoom: 5
 });
 
 var map = L.map('map')
