@@ -99,7 +99,7 @@
 #timeseries .c3-line {
   stroke-width: 1.6px;
 }
-#timeseries .c3-line-Bamako {
+#timeseries .c3-line-Average {
   stroke-width: 3px;
 }
 </style>
@@ -109,9 +109,9 @@
 // this uses c3 (d3) to load the time series data from a CSV file
 // then carts it into a time series
 
-// color palette: #d53e4f, #f46d43, #fdae61, #fee08b, #ffffbf, #e6f598, #abdda4, #66c2a5, #3288bd
+// Color Brewer Palette: #d53e4f, #f46d43, #fdae61, #fee08b, #ffffbf, #e6f598, #abdda4, #66c2a5, #3288bd
 
-var colorPalette = ['rgb(166,206,227)','rgb(31,120,180)','rgb(178,223,138)','rgb(51,160,44)','rgb(251,154,153)','rgb(227,26,28)','rgb(253,191,111)','rgb(255,127,0)','rgb(202,178,214)'];
+var colorPalette = ['#B2B2B2', '#007CE0'];
 var timeseries = c3.generate({
   bindto: '#timeseries',
     data: {
@@ -119,15 +119,16 @@ var timeseries = c3.generate({
       url: 'data/idp_data_timeseries.csv',
       type: 'spline',
       colors: {
-        Bamako: colorPalette[1],
-        Gao: colorPalette[2],
-        Kayes: colorPalette[3],
-        Kidal: colorPalette[4],
-        Koulikoro: colorPalette[5],
-        Mopti: colorPalette[6],
-        Segou: colorPalette[7],
-        Sikasso: colorPalette[8],
-        Tombouctou: colorPalette[9]
+        Bamako: colorPalette[0],
+        Gao: colorPalette[0],
+        Kayes: colorPalette[0],
+        Kidal: colorPalette[0],
+        Koulikoro: colorPalette[0],
+        Mopti: colorPalette[0],
+        Segou: colorPalette[0],
+        Sikasso: colorPalette[0],
+        Tombouctou: colorPalette[0],
+        Average: colorPalette[1]
       }
     },
     axis: {
@@ -154,6 +155,13 @@ var timeseries = c3.generate({
       width: 800
     }
 });
+
+// to give a little effect, let's unload all except the average
+setTimeout(function () {
+    chart.unload({
+        ids: 'Bamako'
+    });
+}, 1000);
 
 </script>
 <script>
