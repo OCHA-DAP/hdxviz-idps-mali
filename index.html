@@ -97,7 +97,7 @@
 <!-- Chart specific styles -->
 <style>
 #timeseries .c3-line {
-  stroke-width: 1.6px;
+  stroke-width: 2px;
 }
 #timeseries .c3-line-Average {
   stroke-width: 3px;
@@ -119,29 +119,22 @@ var timeseries = c3.generate({
   bindto: '#timeseries',
     data: {
       x: 'date',
-      url: 'data/idp_data_timeseries.csv',
-      type: 'spline',
+      url: 'data/idp_total_data.csv',
+      type: 'line',
       colors: {
-        Bamako: colorPalette[0],
-        Gao: colorPalette[0],
-        Kayes: colorPalette[0],
-        Kidal: colorPalette[0],
-        Koulikoro: colorPalette[0],
-        Mopti: colorPalette[0],
-        Segou: colorPalette[0],
-        Sikasso: colorPalette[0],
-        Tombouctou: colorPalette[0],
-        Average: colorPalette[1]
+        total: colorPalette[1]
       }
     },
     axis: {
       x: {
+        label: 'Time',
         type: 'timeseries',
           tick: {
             format: '%B, %Y'
           }
       },
       y: {
+        label: 'Number of IDPs',
         show: true
       }
     },
@@ -151,11 +144,14 @@ var timeseries = c3.generate({
       }
     },
     point: {
-      show: false
+      show: true
     },
     size: {
       height: 300,
       width: 800
+    },
+    legend: {
+      show: false
     }
 });
 
