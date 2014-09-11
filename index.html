@@ -123,6 +123,9 @@ var timeseries = c3.generate({
       type: 'line',
       colors: {
         total: colorPalette[1]
+      },
+      names: {
+        total: "Total Number of Internally Displaced Persons"
       }
     },
     axis: {
@@ -134,7 +137,7 @@ var timeseries = c3.generate({
           }
       },
       y: {
-        label: 'Number of IDPs',
+        label: 'Total Number of IDPs',
         show: true
       }
     },
