@@ -259,7 +259,7 @@ input[type="button"],
 input[type="reset"], 
 input[type="submit"],
 .entry-content a.more-link {
-    background-color: #404040;
+    background-color: #007CE0;
 	border-radius: 3px;
 	border: none;
 	color: #FFF;
@@ -275,7 +275,7 @@ input[type="submit"],
 			box-shadow: none!important;
 	-webkit-transition: all .1s;
 	   -moz-transition: all .1s;
-		-ms-transition: all .1s; 	   
+		-ms-transition: all .1s;
 }
 
 .btn:hover, 
@@ -289,12 +289,12 @@ input[type="button"]:hover,
 input[type="reset"]:hover, 
 input[type="submit"]:hover,
 .entry-content a.more-link:hover {
-	background-color: #f2645a; 
+	background-color: #f2645a;
     color: #FFF;
 }
 
 a.more-link,
-.entry-content a.more-link { 
+.entry-content a.more-link {
 	background-image: url(assets/images/sprite.png);
 	background-position: 10px -56px;
 	background-repeat: no-repeat;
