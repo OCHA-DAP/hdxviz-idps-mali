@@ -27,10 +27,10 @@
 body {
  	background-color: #ffffff;
   	color: #404040;
-  	font: 17px/30px "Source Sans Pro", Helvetica, Arial, sans-serif; /* It was 'Source Sans Pro' */
+  	font: 17px/30px "Source Sans Pro", Helvetica, Arial, sans-serif;
   	font-weight: 300;
   	background-size: 1500px;
-  	max-width: 1260px;
+  	max-width: 1360px;
    	margin-left: auto;
    	margin-right: auto;
 }
@@ -62,16 +62,16 @@ h1, h2, h3, h4, h5, h6 {
 	font-weight: bold;
 }
 
-header h1 { 
+header h1 {
 	font-family: 'Source Sans Pro';
 	font-weight: 700;
 	color: #666666;
-	/* text-shadow: 0.05em 0.075em 0 rgba(0,0,0,0.1); */ 
+	/* text-shadow: 0.05em 0.075em 0 rgba(0,0,0,0.1); */
 }
 
-header h4 { 
-	font-family: 'Source Sans Pro'; 
-	font-weight: 300; 
+header h4 {
+	font-family: 'Source Sans Pro';
+	font-weight: 300;
 }
  
 h1 small, h2 small, h3 small, h4 small, h5 small, h6 small { 
@@ -268,7 +268,7 @@ input[type="submit"],
 	font: bold 15px "Source Sans Pro", Arial, Helvetica, Geneva, sans-serif;
 	margin: 1px 1px 4px 0; 
 	outline: none;
-	padding: 15px 18px;
+	padding: 9px 12px;
 	text-align: center;
 	-webkit-box-shadow: none!important;
 	   -moz-box-shadow: none!important;
